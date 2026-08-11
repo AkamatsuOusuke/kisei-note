@@ -1,17 +1,38 @@
 import Book from "./Book";
+import bgPhoto from "../assets/meadow-bg.webp";
 
 export default function Scene({ books, onOpenBook, onPlayOpenSfx, phase }) {
   return (
     <div className="scene">
-      <div className="scene__sky" />
-      <div className="scene__sun" />
-      <div className="scene__ground" />
+      {/* photo background（軽量webpに圧縮した草原写真） */}
+      <div className="scene__bg" style={{ backgroundImage: `url(${bgPhoto})` }} />
 
-      {[...Array(6)].map((_, i) => (
+      {/* soft vignette overlay */}
+      <div className="scene__vignette" />
+
+      {/* dreamy haze near horizon */}
+      <div className="scene__haze" />
+
+      {/* wind lines drifting across grass */}
+      {[...Array(5)].map((_, i) => (
         <div
-          key={i}
-          className="scene__cloud"
-          style={{ top: `${8 + i * 6}%`, "--cloud-delay": `${i * 3.5}s`, "--cloud-dur": `${40 + i * 6}s` }}
+          key={`wind-${i}`}
+          className="scene__wind"
+          style={{ top: `${55 + i * 6}%`, "--wind-delay": `${i * 1.2}s`, "--wind-dur": `${3.5 + i * 0.6}s` }}
+        />
+      ))}
+
+      {/* floating seeds / dandelions */}
+      {[...Array(8)].map((_, i) => (
+        <div
+          key={`seed-${i}`}
+          className="scene__seed"
+          style={{
+            left: `${8 + i * 11}%`,
+            "--seed-delay": `${i * 1.4}s`,
+            "--seed-dur": `${7 + i * 1.1}s`,
+            "--seed-drift": `${(i % 2 === 0 ? 1 : -1) * (20 + i * 8)}px`,
+          }}
         />
       ))}
 

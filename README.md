@@ -2,7 +2,7 @@
 
 「帰省」をテーマにしたアプリです。地元と現在地、それぞれの場所の魅力を見つけて届け合います。
 
-[travel-note](https://github.com/AkamatsuOusuke/travel-note) の「旅先でノートが降ってくる」演出をベースに、帰省向けに作り直しました。背景は巨大な画像を埋め込まず、軽量な CSS グラデーションで表現しています。
+[travel-note](https://github.com/AkamatsuOusuke/travel-note) の「本が空から降ってくる」演出・BGM・効果音はそのまま引き継ぎ、背景の草原写真だけ軽量化しました（JSに埋め込まれた353KBのbase64 JPEGを、独立したWebP画像・166KBに圧縮）。
 
 ## できること
 

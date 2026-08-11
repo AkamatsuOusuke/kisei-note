@@ -51,84 +51,94 @@
   background: #fff;
 }
 
-/* ══════ Scene (背景を軽量CSSグラデーションで表現) ══════ */
+/* ══════ Scene（草原の写真 + travel-note と同じ空気感の演出） ══════ */
 .scene {
   position: relative;
   flex: 1;
   min-height: 55vh;
   overflow: hidden;
   border-radius: 0;
+  background: #1a2a10; /* 画像読み込み中のフォールバック */
 }
-.scene__sky {
+.scene__bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #bfe3f0 0%, #eaf6d8 55%, #cfe8a0 70%);
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
 }
-.scene__sun {
+
+/* vignette */
+.scene__vignette {
   position: absolute;
-  top: 6%;
-  right: 12%;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 244, 200, 0.95), rgba(255, 244, 200, 0));
-  filter: blur(1px);
+  inset: 0;
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 35%, rgba(0, 0, 0, 0.35) 100%);
+  pointer-events: none;
 }
-.scene__ground {
+
+/* horizon haze */
+.scene__haze {
   position: absolute;
+  top: 36%;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 45%;
-  background: radial-gradient(ellipse at 50% 0%, #a9d97a 0%, #7fbf4e 45%, #5a9a34 100%);
-  border-top-left-radius: 50% 20px;
-  border-top-right-radius: 50% 20px;
+  height: 20%;
+  background: linear-gradient(180deg, transparent 0%, rgba(232, 244, 216, 0.1) 50%, transparent 100%);
+  pointer-events: none;
+  filter: blur(8px);
 }
-.scene__cloud {
+
+/* wind */
+.scene__wind {
   position: absolute;
-  left: -140px;
-  width: 120px;
-  height: 36px;
-  background: rgba(255, 255, 255, 0.75);
-  border-radius: 999px;
-  filter: blur(1px);
-  animation: cloud-drift var(--cloud-dur, 45s) linear infinite;
-  animation-delay: var(--cloud-delay, 0s);
+  left: -10%;
+  right: -10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transform-origin: left center;
+  animation: windDrift var(--wind-dur) var(--wind-delay) ease-in-out infinite;
+  pointer-events: none;
 }
-.scene__cloud::before,
-.scene__cloud::after {
-  content: "";
+@keyframes windDrift {
+  0%   { transform: scaleX(0) translateX(0); opacity: 0; }
+  10%  { opacity: 0.2; }
+  90%  { opacity: 0.12; }
+  100% { transform: scaleX(1) translateX(80px); opacity: 0; }
+}
+
+/* seeds */
+.scene__seed {
   position: absolute;
-  background: inherit;
-  border-radius: 999px;
+  bottom: 48%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.73);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.53);
+  pointer-events: none;
+  animation: seedFloat var(--seed-dur) var(--seed-delay) ease-in-out infinite;
 }
-.scene__cloud::before {
-  width: 60px;
-  height: 60px;
-  top: -26px;
-  left: 10px;
-}
-.scene__cloud::after {
-  width: 46px;
-  height: 46px;
-  top: -18px;
-  left: 60px;
-}
-@keyframes cloud-drift {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(100vw + 200px)); }
+@keyframes seedFloat {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 0.8; }
+  92%  { opacity: 0.4; }
+  100% { transform: translateY(-90px) translateX(var(--seed-drift)) rotate(200deg); opacity: 0; }
 }
 
 .scene__hint {
-  color: rgba(20, 30, 5, 0.6);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
   font-size: 14px;
+  font-style: italic;
 }
 
 .scene__books {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 14%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   gap: 6vw;
   flex-wrap: wrap;
