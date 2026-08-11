@@ -16,7 +16,7 @@
 ## 技術構成
 
 - React 19 + Vite
-- Firebase Firestore（データベース）
+- Supabase（Postgres データベース）
 - OpenStreetMap Nominatim（地名検索・逆ジオコーディング、APIキー不要）
 - 二重投票 / 二重いいねの防止はブラウザの `localStorage` による簡易実装
 
@@ -28,57 +28,47 @@
 npm install
 ```
 
-### 2. Firebase プロジェクトを準備する
+### 2. Supabase プロジェクトを準備する
 
-1. [Firebase コンソール](https://console.firebase.google.com/) で新しいプロジェクトを作成します。
-2. 「Firestore Database」を有効化します（本番モードでOK。ルールは後述の `firebase/firestore.rules` を使います）。
-3. 「プロジェクトの設定 → 全般 → マイアプリ」でウェブアプリを追加し、SDK の設定値を取得します。
+1. [Supabase](https://supabase.com/) で新しいプロジェクトを作成します。
+2. SQL Editor で `supabase/schema.sql` の内容を貼り付けて実行します（テーブル・RLSポリシー・いいね/投票用の関数がまとめて作成されます）。
+3. Project Settings → API から `Project URL` と `anon public` キーを取得します。
 4. `.env.example` を `.env` にコピーし、取得した値を貼り付けます。
 
 ```bash
 cp .env.example .env
 ```
 
-### 3. Firestore のセキュリティルールを反映する
+> このアプリはログイン機能を持たないため、匿名キー(anon key)で誰でも読み書きできる簡易なRLSポリシーになっています。本格的に公開する場合はSupabase Authと組み合わせてポリシーを強化してください。
 
-このアプリはログイン機能を持たないため、匿名で読み書きできる簡易ルール（`firebase/firestore.rules`）を用意しています。[Firebase CLI](https://firebase.google.com/docs/cli) を使う場合:
-
-```bash
-npm install -g firebase-tools
-firebase login
-firebase use --add   # 作成したプロジェクトを選択
-firebase deploy --only firestore:rules
-```
-
-CLIを使わない場合は、Firebase コンソールの Firestore → ルール タブに `firebase/firestore.rules` の内容を貼り付けても構いません。
-
-> 誰でも書き込める簡易ルールです。本格的に公開する場合は Firebase Authentication と組み合わせてルールを強化してください。
-
-### 4. 開発サーバーを起動
+### 3. 開発サーバーを起動
 
 ```bash
 npm run dev
 ```
 
-## データ構造（Firestore）
+## データ構造（Supabase / Postgres）
 
 ```
-places/{cityKey}
-  city, prefecture, country, lat, lng
+places
+  id, city_key(unique), city, prefecture, country, lat, lng
   kaisei_count      … 「帰省したい」の合計数
   created_at
 
-  charms/{charmId}  … その場所に投稿された「魅力」
-    content
-    likes_count
-    created_at
+charms
+  id, place_id(→ places.id), content
+  likes_count
+  created_at
 ```
 
-`cityKey` は `国コード|緯度(小数2桁)|経度(小数2桁)` の形式で、同じ場所の重複登録を防ぎます。
+`city_key` は `国コード|緯度(小数2桁)|経度(小数2桁)` の形式で、同じ場所の重複登録を防ぎます。
 
 ## デプロイ
 
+Vite製の静的サイトなので、Vercel / Netlify / GitHub Pages など任意の静的ホスティングにデプロイできます。
+
 ```bash
 npm run build
-firebase deploy --only hosting
 ```
+
+ビルド成果物は `dist/` に出力されます。デプロイ先に環境変数 `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` を設定するのを忘れずに。

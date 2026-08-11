@@ -138,7 +138,7 @@ export default function App() {
       };
     });
     try {
-      await likeCharm(openBookData.place.id, charmId);
+      await likeCharm(charmId);
     } catch {
       /* ベストエフォート：失敗しても表示は既に更新済み */
     }

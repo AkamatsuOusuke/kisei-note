@@ -1,78 +1,63 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  addDoc,
-  setDoc,
-  updateDoc,
-  increment,
-  serverTimestamp,
-  query,
-  where,
-  orderBy,
-  limit,
-} from "firebase/firestore";
-import { db } from "./firebaseClient";
+import { supabase } from "./supabaseClient";
 
-// GPS/検索で得た地名情報から places ドキュメントを作成 or 取得
-// ドキュメントID = cityKey（緯度経度＋国コードで一意）
+// GPS/検索で得た地名情報から places レコードを作成 or 取得
 export async function getOrCreatePlace(placeInfo) {
   const { cityKey, city, prefecture, country, lat, lng } = placeInfo;
-  const ref = doc(db, "places", cityKey);
-  const snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    await setDoc(ref, {
-      city,
-      prefecture,
-      country,
-      lat,
-      lng,
-      kaisei_count: 0,
-      created_at: serverTimestamp(),
-    });
-    return { id: cityKey, city_key: cityKey, city, prefecture, country, lat, lng, kaisei_count: 0 };
-  }
+  const { error: upsertError } = await supabase.from("places").upsert(
+    { city_key: cityKey, city, prefecture, country, lat, lng },
+    { onConflict: "city_key", ignoreDuplicates: true }
+  );
+  if (upsertError) throw upsertError;
 
-  const data = snap.data();
-  return { id: snap.id, city_key: snap.id, ...data };
+  const { data, error: fetchError } = await supabase
+    .from("places")
+    .select("*")
+    .eq("city_key", cityKey)
+    .single();
+  if (fetchError) throw fetchError;
+  if (!data?.id) throw new Error("No place id returned");
+
+  return data;
 }
 
 export async function fetchCharms(placeId) {
-  const q = query(collection(db, "places", placeId, "charms"), orderBy("created_at", "desc"));
-  const snaps = await getDocs(q);
-  return snaps.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const { data, error } = await supabase
+    .from("charms")
+    .select("*")
+    .eq("place_id", placeId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data || [];
 }
 
 export async function addCharm(placeId, content) {
-  const ref = await addDoc(collection(db, "places", placeId, "charms"), {
-    content,
-    likes_count: 0,
-    created_at: serverTimestamp(),
-  });
-  return { id: ref.id, content, likes_count: 0, created_at: new Date().toISOString() };
+  const { data, error } = await supabase
+    .from("charms")
+    .insert({ place_id: placeId, content })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
 }
 
-export async function likeCharm(placeId, charmId) {
-  await updateDoc(doc(db, "places", placeId, "charms", charmId), {
-    likes_count: increment(1),
-  });
+export async function likeCharm(charmId) {
+  const { error } = await supabase.rpc("increment_likes", { charm_id: charmId });
+  if (error) throw error;
 }
 
 export async function voteKaisei(placeId) {
-  await updateDoc(doc(db, "places", placeId), {
-    kaisei_count: increment(1),
-  });
+  const { error } = await supabase.rpc("increment_kaisei", { target_place_id: placeId });
+  if (error) throw error;
 }
 
-export async function fetchRanking(limitCount = 20) {
-  const q = query(
-    collection(db, "places"),
-    where("kaisei_count", ">", 0),
-    orderBy("kaisei_count", "desc"),
-    limit(limitCount)
-  );
-  const snaps = await getDocs(q);
-  return snaps.docs.map((d) => ({ id: d.id, ...d.data() }));
+export async function fetchRanking(limit = 20) {
+  const { data, error } = await supabase
+    .from("places")
+    .select("*")
+    .gt("kaisei_count", 0)
+    .order("kaisei_count", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return data || [];
 }
