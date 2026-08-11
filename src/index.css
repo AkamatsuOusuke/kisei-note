@@ -10,8 +10,6 @@ body,
 }
 
 body {
-  font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui,
-    -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 

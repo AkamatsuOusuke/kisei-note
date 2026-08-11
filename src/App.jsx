@@ -233,14 +233,16 @@ export default function App() {
 
   return (
     <div className="app">
+      <div className="top-actions">
+        <button className="top-actions__btn" onClick={openRanking}>🏆 ランキング</button>
+        <button className="top-actions__btn" onClick={handleChangeHometown}>地元を変更</button>
+        <button className="top-actions__btn bgm-toggle" onClick={toggleBgm}>{bgmOn ? "🔊 ON" : "🔇 OFF"}</button>
+      </div>
+
       <header className="header">
         <p className="header__eyebrow">おかえりなさい</p>
         <h1 className="header__title">帰省ノート</h1>
-        <div className="header__actions">
-          <button className="header__link" onClick={openRanking}>🏆 ランキング</button>
-          <button className="header__link" onClick={handleChangeHometown}>地元を変更</button>
-          <button className="header__link bgm-toggle" onClick={toggleBgm}>{bgmOn ? "🔊 ON" : "🔇 OFF"}</button>
-        </div>
+        <div className="header__divider" />
       </header>
 
       <Scene books={books} onOpenBook={openBook} onPlayOpenSfx={playOpenSfx} phase={phase} />
@@ -256,6 +258,7 @@ export default function App() {
         >
           {phase === "locating" ? "取得中…" : "現在地を更新"}
         </button>
+        <p className="footer__hint">位置情報から、現在地のノートを取得します。</p>
       </footer>
 
       {openType === "hometown" && openBookData && (
