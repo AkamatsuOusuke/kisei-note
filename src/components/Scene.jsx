@@ -1,7 +1,11 @@
 import Book from "./Book";
 import bgPhoto from "../assets/meadow-bg.webp";
 
-export default function Scene({ books, onOpenBook, onPlayOpenSfx, phase }) {
+// 現在地の本から先に落ちてくるようにする
+const DROP_ORDER = { current: 0, hometown: 1 };
+const DROP_STAGGER = 0.55; // 秒
+
+export default function Scene({ books, onOpenBook, onPlayOpenSfx, onPlayDropSfx, phase }) {
   return (
     <div className="scene">
       {/* photo background（軽量webpに圧縮した草原写真） */}
@@ -43,8 +47,10 @@ export default function Scene({ books, onOpenBook, onPlayOpenSfx, phase }) {
               key={b.type}
               type={b.type}
               place={b.place}
+              dropDelay={DROP_ORDER[b.type] * DROP_STAGGER}
               onOpen={() => onOpenBook(b.type)}
               onPlayOpenSfx={onPlayOpenSfx}
+              onPlayDropSfx={onPlayDropSfx}
             />
           ))
         ) : phase === "locating" || phase === "loading" ? (

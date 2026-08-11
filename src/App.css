@@ -191,11 +191,11 @@
 
 .scene__books {
   position: absolute;
-  bottom: 33%;
+  bottom: 12%;
   left: 50%;
   transform: translateX(-50%);
   width: 70%;
-  height: 140px;
+  height: 120px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -203,10 +203,10 @@
   perspective: 700px;
 }
 
-/* ══════ Book (travel-note と同じサイズ・落下演出) ══════ */
+/* ══════ Book (travel-noteより一回り小さめ) ══════ */
 .book {
   position: relative;
-  width: clamp(120px, 20vw, 220px);
+  width: clamp(95px, 15vw, 170px);
   aspect-ratio: 640 / 480;
   cursor: pointer;
   user-select: none;

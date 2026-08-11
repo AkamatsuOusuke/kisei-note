@@ -109,7 +109,6 @@ export default function App() {
 
       setBooks(buildBooks(hometownPlace, currentPlace));
       setPhase("ready");
-      playDropSfx();
     } catch (err) {
       const messages = {
         denied: "位置情報の利用が許可されませんでした。",
@@ -120,7 +119,7 @@ export default function App() {
       setErrorMsg(messages[err.message] || "地図情報の取得に失敗しました。通信環境をご確認ください。");
       setPhase("error");
     }
-  }, [buildBooks, playDropSfx]);
+  }, [buildBooks]);
 
   useEffect(() => {
     if (!hometown) return;
@@ -245,7 +244,13 @@ export default function App() {
         <div className="header__divider" />
       </header>
 
-      <Scene books={books} onOpenBook={openBook} onPlayOpenSfx={playOpenSfx} phase={phase} />
+      <Scene
+        books={books}
+        onOpenBook={openBook}
+        onPlayOpenSfx={playOpenSfx}
+        onPlayDropSfx={playDropSfx}
+        phase={phase}
+      />
 
       <footer className="footer">
         {phase === "error" && <p className="footer__error">{errorMsg}</p>}

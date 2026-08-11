@@ -8,10 +8,9 @@ function addressToPlaceInfo(address, lat, lng) {
   const city =
     address.city || address.town || address.village || address.county || address.state_district || "不明な場所";
 
-  // 保存キーは表示名ではなく緯度経度ベースで固定する
-  const roundedLat = Number(lat).toFixed(2);
-  const roundedLng = Number(lng).toFixed(2);
-  const cityKey = `${country}|${roundedLat}|${roundedLng}`;
+  // 保存キーは市区町村名ベースで固定する（緯度経度だと、地元(検索結果の代表点)と
+  // 現在地(GPS実測値)が同じ市でも一致しないため、市町村の同一判定に使えなかった）
+  const cityKey = `${country}|${prefecture}|${city}`;
 
   return { country, prefecture, city, cityKey, lat, lng };
 }
