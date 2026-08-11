@@ -1,46 +1,32 @@
 import { useMemo, useState } from "react";
-
-const PALETTES = [
-  { cover: "#c8a878", spine: "#5a3a1a" },
-  { cover: "#a8c880", spine: "#2a4a1a" },
-  { cover: "#7ab0d8", spine: "#1a3a5a" },
-  { cover: "#c87878", spine: "#5a1a1a" },
-  { cover: "#c8b060", spine: "#4a3a1a" },
-  { cover: "#a878c8", spine: "#3a1a4a" },
-];
-
-function getPalette(key) {
-  let h = 0;
-  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) & 0xffffffff;
-  return PALETTES[Math.abs(h) % PALETTES.length];
-}
+import bookImg from "../assets/本.png";
 
 function getRandomTransform() {
   return {
-    x: (Math.random() - 0.5) * 50,
-    rot: (Math.random() - 0.5) * 14,
-    delay: Math.random() * 0.3,
+    x: (Math.random() - 0.5) * 30, // -15%〜15%
+    y: Math.random() * 10,
+    rot: (Math.random() - 0.5) * 16, // -8〜8deg
+    delay: Math.random() * 0.25,
   };
 }
 
 const LABELS = {
-  hometown: { badge: "地元", icon: "🏡" },
-  current: { badge: "現在地", icon: "📍" },
+  hometown: "地元",
+  current: "現在地",
 };
 
-export default function Book({ type, place, onOpen }) {
+export default function Book({ type, place, onOpen, onPlayOpenSfx }) {
   const [phase, setPhase] = useState("idle");
-  const pal = useMemo(() => getPalette(place.city_key), [place.city_key]);
   const t = useMemo(() => getRandomTransform(), []);
-  const label = LABELS[type];
 
   const handleClick = () => {
     if (phase !== "idle") return;
     setPhase("zooming");
     setTimeout(() => {
+      onPlayOpenSfx?.();
       onOpen();
       setPhase("idle");
-    }, 420);
+    }, 500);
   };
 
   return (
@@ -48,19 +34,16 @@ export default function Book({ type, place, onOpen }) {
       className={`book book--${phase}`}
       style={{
         "--book-x": `${t.x}%`,
+        "--book-y": `${t.y}px`,
         "--book-rot": `${t.rot}deg`,
         "--appear-delay": `${t.delay}s`,
-        "--book-cover": pal.cover,
-        "--book-spine": pal.spine,
       }}
       onClick={handleClick}
     >
-      <div className="book__shadow" />
-      <div className="book__body">
-        <div className="book__ribbon">{label.icon}</div>
-      </div>
+      <div className="book__grass-shadow" />
+      <div className="book__body" style={{ backgroundImage: `url(${bookImg})` }} />
       <div className="book__label">
-        <span className="book__label-badge">{label.badge}</span>
+        <span className="book__label-badge">{LABELS[type]}</span>
         <span className="book__label-city">{place.city}</span>
       </div>
     </div>

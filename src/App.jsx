@@ -1,5 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
+import bgmTrack from "./assets/10℃.mp3";
+import sfxDrop from "./assets/ガサッ.mp3";
+import sfxOpen from "./assets/ペラッ.mp3";
 import { getCurrentPosition, reverseGeocode } from "./lib/geo";
 import { getOrCreatePlace, fetchCharms, addCharm, likeCharm, voteKaisei, fetchRanking } from "./lib/api";
 import {
@@ -34,6 +37,50 @@ export default function App() {
 
   const [likedIds, setLikedIds] = useState(() => new Set());
 
+  // BGM / 効果音（travel-note と同じ演出）
+  const [bgmOn, setBgmOn] = useState(false);
+  const bgmRef = useRef(null);
+  const dropSfxRef = useRef(null);
+  const openSfxRef = useRef(null);
+
+  useEffect(() => {
+    bgmRef.current = new Audio(bgmTrack);
+    bgmRef.current.loop = true;
+    bgmRef.current.volume = 0.35;
+
+    dropSfxRef.current = new Audio(sfxDrop);
+    dropSfxRef.current.volume = 0.2;
+
+    openSfxRef.current = new Audio(sfxOpen);
+    openSfxRef.current.volume = 0.35;
+
+    return () => {
+      bgmRef.current?.pause();
+    };
+  }, []);
+
+  const toggleBgm = () => {
+    if (!bgmRef.current) return;
+    if (bgmOn) {
+      bgmRef.current.pause();
+    } else {
+      bgmRef.current.play().catch(() => {});
+    }
+    setBgmOn((v) => !v);
+  };
+
+  const playDropSfx = useCallback(() => {
+    if (!dropSfxRef.current || !bgmOn) return;
+    dropSfxRef.current.currentTime = 0;
+    dropSfxRef.current.play().catch(() => {});
+  }, [bgmOn]);
+
+  const playOpenSfx = useCallback(() => {
+    if (!openSfxRef.current || !bgmOn) return;
+    openSfxRef.current.currentTime = 0;
+    openSfxRef.current.play().catch(() => {});
+  }, [bgmOn]);
+
   const buildBooks = useCallback((hometownPlace, currentPlace) => {
     if (hometownPlace.city_key === currentPlace.city_key) {
       return [{ type: "current", place: currentPlace }];
@@ -62,6 +109,7 @@ export default function App() {
 
       setBooks(buildBooks(hometownPlace, currentPlace));
       setPhase("ready");
+      playDropSfx();
     } catch (err) {
       const messages = {
         denied: "位置情報の利用が許可されませんでした。",
@@ -72,7 +120,7 @@ export default function App() {
       setErrorMsg(messages[err.message] || "地図情報の取得に失敗しました。通信環境をご確認ください。");
       setPhase("error");
     }
-  }, [buildBooks]);
+  }, [buildBooks, playDropSfx]);
 
   useEffect(() => {
     if (!hometown) return;
@@ -191,10 +239,11 @@ export default function App() {
         <div className="header__actions">
           <button className="header__link" onClick={openRanking}>🏆 ランキング</button>
           <button className="header__link" onClick={handleChangeHometown}>地元を変更</button>
+          <button className="header__link bgm-toggle" onClick={toggleBgm}>{bgmOn ? "🔊 ON" : "🔇 OFF"}</button>
         </div>
       </header>
 
-      <Scene books={books} onOpenBook={openBook} phase={phase} />
+      <Scene books={books} onOpenBook={openBook} onPlayOpenSfx={playOpenSfx} phase={phase} />
 
       <footer className="footer">
         {phase === "error" && <p className="footer__error">{errorMsg}</p>}

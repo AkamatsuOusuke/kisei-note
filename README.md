@@ -47,6 +47,10 @@ cp .env.example .env
 npm run dev
 ```
 
+> **注意**：`index.html` をブラウザで直接開いたり（`file://...`）、`npx serve` のような単純な静的サーバーで配信したりしないでください。`src/main.jsx` は Vite が変換して初めて動くファイルなので、素の状態で配信すると
+> `Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/jsx".`
+> というエラーになります。必ず `npm run dev`（開発時）または `npm run build` 後に `npm run preview`（本番ビルドの確認）でアクセスしてください。
+
 ## データ構造（Supabase / Postgres）
 
 ```

@@ -1,6 +1,6 @@
 import Book from "./Book";
 
-export default function Scene({ books, onOpenBook, phase }) {
+export default function Scene({ books, onOpenBook, onPlayOpenSfx, phase }) {
   return (
     <div className="scene">
       <div className="scene__sky" />
@@ -18,7 +18,13 @@ export default function Scene({ books, onOpenBook, phase }) {
       <div className="scene__books">
         {phase === "ready" && books.length > 0 ? (
           books.map((b) => (
-            <Book key={b.type} type={b.type} place={b.place} onOpen={() => onOpenBook(b.type)} />
+            <Book
+              key={b.type}
+              type={b.type}
+              place={b.place}
+              onOpen={() => onOpenBook(b.type)}
+              onPlayOpenSfx={onPlayOpenSfx}
+            />
           ))
         ) : phase === "locating" || phase === "loading" ? (
           <p className="scene__hint">現在地を取得しています…</p>
