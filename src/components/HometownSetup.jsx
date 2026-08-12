@@ -33,25 +33,22 @@ export default function HometownSetup({ onSelect }) {
       <div className="setup__bg" style={{ backgroundImage: `url(${bgPhoto})` }} />
       <div className="setup__scrim" />
       <div className="setup__card">
-        <p className="setup__eyebrow">はじめに</p>
         <h1 className="setup__title">
           あなたの「地元」を
           <br />
           登録してください
         </h1>
         <p className="setup__desc">
-          地元を登録すると、そこにいる人たちが投稿した
+          遠くにいるときでも、
           <br />
-          街の魅力を読んだり、「帰省したい」と気持ちを
-          <br />
-          届けたりできるようになります。
+          あなたの地元の様子を見ることができます。
         </p>
 
         <form className="setup__form" onSubmit={handleSearch}>
           <input
             className="setup__input"
             type="text"
-            placeholder="例）札幌市、京都府京都市、Nagasaki..."
+            placeholder="例）札幌市、那覇市、etc..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
