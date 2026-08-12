@@ -234,7 +234,7 @@ export default function App() {
     <div className="app">
       <div className="top-actions">
         <button className="top-actions__btn" onClick={openRanking}>🏆 ランキング</button>
-        <button className="top-actions__btn" onClick={handleChangeHometown}>地元を変更</button>
+        <button className="top-actions__btn" onClick={handleChangeHometown}>地元を登録</button>
         <button className="top-actions__btn bgm-toggle" onClick={toggleBgm}>{bgmOn ? "🔊 ON" : "🔇 OFF"}</button>
       </div>
 
@@ -253,7 +253,6 @@ export default function App() {
 
       <footer className="footer">
         {phase === "error" && <p className="footer__error">{errorMsg}</p>}
-        {phase === "ready" && <p className="footer__success">現在地: {books.find((b) => b.type === "current")?.place.city}</p>}
 
         <button
           className={`locate-btn ${phase === "locating" ? "locate-btn--loading" : ""}`}
