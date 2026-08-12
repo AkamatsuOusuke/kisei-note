@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { searchCity } from "../lib/geo";
+import bgPhoto from "../assets/meadow-bg.webp";
 
 export default function HometownSetup({ onSelect }) {
   const [query, setQuery] = useState("");
@@ -29,11 +30,21 @@ export default function HometownSetup({ onSelect }) {
 
   return (
     <div className="setup">
+      <div className="setup__bg" style={{ backgroundImage: `url(${bgPhoto})` }} />
+      <div className="setup__scrim" />
       <div className="setup__card">
         <p className="setup__eyebrow">はじめに</p>
-        <h1 className="setup__title">あなたの「地元」を登録してください</h1>
+        <h1 className="setup__title">
+          あなたの「地元」を
+          <br />
+          登録してください
+        </h1>
         <p className="setup__desc">
-          地元を登録すると、そこにいる人たちが投稿した街の魅力を読んだり、「帰省したい」と気持ちを届けたりできるようになります。
+          地元を登録すると、そこにいる人たちが投稿した
+          <br />
+          街の魅力を読んだり、「帰省したい」と気持ちを
+          <br />
+          届けたりできるようになります。
         </p>
 
         <form className="setup__form" onSubmit={handleSearch}>

@@ -307,7 +307,7 @@
 }
 .footer__success {
   position: fixed;
-  top: 60px;
+  top: 172px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 12px;
@@ -360,22 +360,40 @@
 
 /* ══════ Setup screen ══════ */
 .setup {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: #1a2a10;
+  overflow: hidden;
   font-family: var(--serif);
   color: var(--ink);
+  background: #1a2a10;
+}
+.setup__bg {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+  filter: blur(16px) brightness(0.75) saturate(1.05);
+  transform: scale(1.08);
+}
+.setup__scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 70% at 50% 45%, rgba(20, 30, 10, 0.35) 0%, rgba(14, 20, 8, 0.6) 100%);
 }
 .setup__card {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 420px;
+  max-width: 460px;
   background: linear-gradient(160deg, var(--paper) 0%, #f0e4cc 100%);
-  border-radius: 3px 10px 10px 3px;
-  padding: 30px 26px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  border-radius: 3px 14px 14px 3px;
+  padding: 34px 32px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
 .setup__eyebrow {
   margin: 0;
@@ -384,17 +402,18 @@
   letter-spacing: 4px;
 }
 .setup__title {
-  margin: 8px 0 12px;
-  font-size: 24px;
+  margin: 8px 0 14px;
+  font-size: 26px;
   font-weight: 300;
   font-style: italic;
   color: var(--ink);
   letter-spacing: 0.5px;
+  line-height: 1.4;
 }
 .setup__desc {
-  margin: 0 0 20px;
+  margin: 0 0 22px;
   font-size: 14px;
-  line-height: 1.8;
+  line-height: 1.9;
   color: var(--ink-2);
 }
 .setup__form {

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import bookImg from "../assets/本.png";
+import bookImg from "../assets/book.png";
 
 function getRandomTransform() {
   return {

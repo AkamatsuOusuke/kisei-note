@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
-import bgmTrack from "./assets/10℃.mp3";
-import sfxDrop from "./assets/ガサッ.mp3";
-import sfxOpen from "./assets/ペラッ.mp3";
+import bgmTrack from "./assets/bgm.mp3";
+import sfxDrop from "./assets/sfx-drop.mp3";
+import sfxOpen from "./assets/sfx-open.mp3";
 import { getCurrentPosition, reverseGeocode } from "./lib/geo";
 import { getOrCreatePlace, fetchCharms, addCharm, likeCharm, voteKaisei, fetchRanking } from "./lib/api";
 import {
@@ -239,8 +239,8 @@ export default function App() {
       </div>
 
       <header className="header">
-        <p className="header__eyebrow">あなたの地元は今</p>
-        <h1 className="header__title">Your Hometown Notebook</h1>
+        <p className="header__eyebrow">おかえりなさい</p>
+        <h1 className="header__title">帰省ノート</h1>
         <div className="header__divider" />
       </header>
 
