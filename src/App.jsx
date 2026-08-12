@@ -239,8 +239,8 @@ export default function App() {
       </div>
 
       <header className="header">
-        <p className="header__eyebrow">おかえりなさい</p>
-        <h1 className="header__title">帰省ノート</h1>
+        <p className="header__eyebrow">帰省日和</p>
+        <h1 className="header__title">あなたのノート</h1>
         <div className="header__divider" />
       </header>
 
