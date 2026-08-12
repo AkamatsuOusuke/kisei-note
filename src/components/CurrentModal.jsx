@@ -28,7 +28,7 @@ export default function CurrentModal({ place, charms, loading, onClose, onSubmit
         </div>
 
         <div className="notebook-page__body">
-          <p className="notebook-page__hint">今いる場所の魅力を投稿してください。地元の人がこのノートを読みます。</p>
+          <p className="notebook-page__hint">ここが地元の人に向けて、今いる場所の魅力を投稿してください。</p>
 
           <textarea
             className="notebook-page__textarea"
